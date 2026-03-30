@@ -1,4 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
+<div style="display:none"><?print_r($arResult["ITEMS"][0]["REVIEWS"])?></div>
 <div class="catalog-list">
 <?if($arParams["DISPLAY_TOP_PAGER"]):?>
 	<?=$arResult["NAV_STRING"]?><br />
@@ -55,8 +56,21 @@ foreach($arResult["ITEMS"] as $cell=>$arElement):
 <?
 		endif;
 	endforeach;
-?>
+	?>
 </div>
+<?if(!empty($arResult["EXTRA"][$arElement["ID"]])):?>
+	<div>
+		<p>Рецензии:</p>
+		<ul>
+			<?foreach($arResult["EXTRA"][$arElement["ID"]] as $key => $itemExtra ):?>
+			<li>
+				<?=$itemExtra["NAME"]?>
+			</li>
+			<?endforeach;?>
+		</ul>
+	</div>
+	<?endif?>
+
 <?
 endforeach; // foreach($arResult["ITEMS"] as $arElement):
 ?>
@@ -65,3 +79,24 @@ endforeach; // foreach($arResult["ITEMS"] as $arElement):
 	<br /><?=$arResult["NAV_STRING"]?>
 <?endif;?>
 </div>
+
+
+<?php if(!empty($arResult["COUNT_REVIEWS"])):?>
+	<?php $this->SetViewTarget('review_block');?>
+		<div id="filial-special" class="information-block">
+					<div class="top"></div>
+					<div class="information-block-inner">
+						<h3>Дополнительно</h3>
+						<div class="special-product">
+							<div class="special-product-title">
+								<?php
+									$first_review = reset($arResult["EXTRA"]);
+									echo $first_review["0"]["NAME"];
+								?>
+							</div>
+						</div>
+					</div>
+					<div class="bottom"></div>
+				</div>
+	<?php $this->EndViewTarget();?>
+<?php endif;?>
