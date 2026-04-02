@@ -10,7 +10,7 @@ $authorIDs = [];
 $sortBy = "id";
 $sortOrder = "asc";
 $arParams["FIELDS"] = ["ID"];
-$filter = ["ACTIVE" => "Y", "UF_AUTHOR_STATUS" => "35", "GROUPS_ID" => [6]];
+$filter = ["ACTIVE" => "Y", "UF_AUTHOR_STATUS" => STATUS_PUBLISHED_ID, "GROUPS_ID" => [GROUP_AUTHORS_ID]];
 
 $res = CUser::GetList(
     $sortBy,
@@ -29,7 +29,7 @@ if( (count($itemIDs) > 0) && (count($authorIDs) > 0) )
     $res = CIBlockElement::GetList(
         ["ID" => "ASC"],
         [
-            "IBlock_ID" => "5",
+            "IBlock_ID" => IBLOCK_REVIEWS_ID,
             "ACTIVE" => "Y",
             "PROPERTY_product" => $itemIDs,
             "PROPERTY_author" => $authorIDs,
@@ -53,41 +53,3 @@ if( (count($itemIDs) > 0) && (count($authorIDs) > 0) )
     
 }
 
-
-/*foreach ($arResult["ITEMS"] as $key => $arItem) 
-{
-    $arResult["ITEMS"][$key]["EXTRA"] = [];
-    $res = CIBlockElement::GetList(
-        ["ID" => "ASC"],
-        [
-            "IBlock_ID" => "5",
-            "ACTIVE" => "Y",
-            "PROPERTY_product" => $arItem["ID"]
-        ],
-        false,
-        false,
-        [
-            "ID",
-            "IBLOCK_ID",
-            "NAME",
-            "PROPERTY_author"
-        ]
-    );
-    while ($row = $res->GetNext())
-    {
-        $rsUser = CUser::GetByID($row['PROPERTY_AUTHOR_VALUE']);
-        while ($arUser = $rsUser->GetNext())
-        {
-            $userGroups = CUser::GetUserGroup($arUser["ID"]);
-            if(
-                $arUser["ACTIVE"] == "Y" && 
-                $arUser["UF_AUTHOR_STATUS"] == "35" &&
-                in_array(6, $userGroups)
-            )
-            {
-                $arResult["ITEMS"][$key]["EXTRA"][] = $row;
-            }
-        }
-
-    }
-}*/
