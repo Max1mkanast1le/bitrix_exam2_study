@@ -73,3 +73,40 @@ class MyIBlockEventHandlers
         }
     }
 }
+
+class MyUserEventHandlers
+{
+    private static $oldUserClass = null;
+
+    public static function OnBeforeUserUpdateHandler(&$arFields)
+    {
+        if($arFields["ID"] > 0)
+        {
+            $res = CUser::GetByID($arFields["ID"]);
+            if ($row = $res->fetch())
+            {
+                self::$oldUserClass = $row["UF_USER_CLASS"];
+            }
+        }
+    }
+
+    public static function OnAfterUserUpdateHandler(&$arFields)
+    {
+        if($arFields["RESULT"] && self::$oldUserClass !== null)
+        {
+            if(isset($arFields["UF_USER_CLASS"]) && $arFields["UF_USER_CLASS"] != self::$oldUserClass)
+            {
+                $arEventfields = [
+                    "OLD_USER_CLASS" => self::$oldUserClass,
+                    "NEW_USER_CLASS" => $arFields["UF_USER_CLASS"],
+                ];
+                
+                CEvent::Send(
+                    "EX2_AUTHOR_INFO",
+                    SITE_ID,
+                    $arEventfields
+                );
+            }
+        }
+    }
+}

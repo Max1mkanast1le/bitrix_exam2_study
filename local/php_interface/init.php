@@ -12,6 +12,7 @@ if (file_exists(__DIR__ . "/eventHandlers.php"))
 }
 $eventManager = \Bitrix\Main\EventManager::getInstance();
 
+//ex2-590
 $eventManager->AddEventhandler("iblock", "OnBeforeIBlockElementAdd", [
     "MyIBlockEventHandlers", 
     "OnBeforeIBlockElementHandler"
@@ -23,4 +24,14 @@ $eventManager->AddEventhandler("iblock", "OnBeforeIBlockElementUpdate", [
 $eventManager->AddEventhandler("iblock", "OnAfterIBlockElementUpdate", [
     "MyIBlockEventHAndlers",
     "OnAfterIBlockElementHandler"
+]);
+
+//ex2-600
+$eventManager->AddEventhandler("main","OnBeforeUserUpdate", [
+    "MyUserEventHandlers",
+    "OnBeforeUserUpdateHandler"
+]);
+$eventManager->AddEventhandler("main","OnAfterUserUpdate", [
+    "MyUserEventHandlers",
+    "OnAfterUserUpdateHandler"
 ]);
