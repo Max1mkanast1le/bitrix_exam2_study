@@ -61,12 +61,24 @@ class MyIBlockEventHandlers
             }
             if($newAuthorId != self::$oldAuthorId)
             {
+                $resOldAuthorName = CUser::GetByID(self::$oldAuthorId);
+                if($rowOldAuthorName = $resOldAuthorName->Fetch())
+                {
+                    $oldAuthorName = $rowOldAuthorName["LOGIN"];
+                }
+
+                $resNewAuthorName = CUser::GetByID($newAuthorId);
+                if($rowNewAuthorName = $resNewAuthorName->Fetch())
+                {
+                    $newAuthorName = $rowNewAuthorName["LOGIN"];
+                }
+
                 CEventLog::Add([
                     "SEVERITY" => "INFO",
                     "AUDIT_TYPE_ID" => LOG_AUDIT_TYPE_ID,
                     "MODULE_ID" => "main",
                     "ITEM_ID" => $arFields["ID"],
-                    "DESCRIPTION" => "В рецензии ID=" . $arFields["ID"] . " изменился автор с ID=" . self::$oldAuthorId . " на ID=" . $newAuthorId,
+                    "DESCRIPTION" => "В рецензии ID=" . $arFields["ID"] . " изменился автор с " . $oldAuthorName . " на " . $newAuthorName,
                 ]);
             }
 
