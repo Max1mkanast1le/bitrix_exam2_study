@@ -119,7 +119,17 @@ class MyUserEventHandlers
                 $res = CUser::GetByID($arFields["USER_ID"]);
                 if ($row = $res->Fetch())
                 {
-                    $arFields["CLASS"] = $row["UF_USER_CLASS"] ?: "Не назначен";
+                    if($row["UF_USER_CLASS"] > 0)
+                    {
+                        $res = CUserFieldEnum::GetList([], ["ID" => $row["UF_USER_CLASS"]]);
+                        if ($row = $res->Fetch())
+                        {
+                            $arFields["CLASS"] = $row["VALUE"];
+                        }
+                    }else
+                    {
+                        $arFields["CLASS"] = "Не назначен";
+                    }
                 }
             }
         }
