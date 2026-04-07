@@ -109,5 +109,20 @@ class MyUserEventHandlers
             }
         }
     }
+
+    public static function OnBeforeEventAddHandler(&$event, &$lid, &$arFields)
+    {
+        if ($event === "USER_INFO")
+        {
+            if (isset($arFields["USER_ID"]) && intval($arFields["USER_ID"]) > 0)
+            {
+                $res = CUser::GetByID($arFields["USER_ID"]);
+                if ($row = $res->Fetch())
+                {
+                    $arFields["CLASS"] = $row["UF_USER_CLASS"] ?: "Не назначен";
+                }
+            }
+        }
+    }
 }
 

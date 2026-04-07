@@ -43,13 +43,37 @@ $eventManager->AddEventhandler("main","OnAfterUserUpdate", [
 ]);
 
 //ex2_610
-CAgent::AddAgent(
-    "MyAgentHandlers::Agent_ex2_610();",
-    "main",
-    'N',
-    86400,
-    "",
-    "Y",
-    ConvertTimeStamp(time() + 86400, "FULL"),
-    10
+$resAgent = Cagent::GetList(
+    ["ID" => "DESC"],
+    ["NAME" => "MyAgentHandlers::Agent_ex2_610();"]
 );
+if(!$resAgent->Fetch())
+{
+    CAgent::AddAgent(
+        "MyAgentHandlers::Agent_ex2_610();",
+        "main",
+        'N',
+        86400,
+        "",
+        "Y",
+        ConvertTimeStamp(time() + 86400, "FULL"),
+        10
+    );
+}
+
+//ex2-620
+$eventManager->AddEventhandler("main", "OnBeforeEventAdd", [
+    "MyUserEventHandlers",
+    "OnBeforeEventAddHandler"
+]);
+
+
+// Перехват функции mail и запись в лог-файл
+if (!function_exists('custom_mail')) {
+    function custom_mail($to, $subject, $message, $additional_headers) {
+        $log = "\n" . str_repeat("-", 20) . "\n";
+        $log .= "Кому: $to\nТема: $subject\nСообщение: $message\nЗаголовки: $additional_headers\n";
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . "/mail_debug.log", $log, FILE_APPEND);
+        return true;
+    }
+}
