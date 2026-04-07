@@ -190,3 +190,52 @@ class MySearchEventHandlers
         return $arFields;
     }
 }
+
+class MyAdminMenuhandlers
+{
+    public static function OnBuildGlobalMenuHandler(&$arGlobalMenu, &$arModuleMenu)
+    {
+        global $USER;
+
+        $userGroups = $USER->GetUserGroupArray();
+
+        if (in_array(5, $userGroups))
+        {
+            foreach ($arGlobalMenu as $key => $menu)
+            {
+                if ($key !== "global_menu_content")
+                {
+                    unset($arGlobalMenu["$key"]);
+                }
+            }
+            foreach ($arModuleMenu as $key => $item)
+            {
+                if ($item["parent_menu"] !== "global_menu_content")
+                {
+                    unset($arModuleMenu[$key]);
+                }
+            }
+
+            $arGlobalMenu["global_menu_fast_access"] = [
+                "menu_id" => "fast_access",
+                "text" => "Быстрый доступ",
+                "title" => "Быстрый доступ",
+                "sort" => 500,
+                "item_id" => "global_menu_fast_access",
+                "help_section" => "fast_access",
+                "items" => [
+                    [
+                        "text" => "Ссылка 1",
+                        "url" => "https://test1",
+                        "title" => "перейти на тест 1",
+                    ],
+                    [
+                        "text" => "Ссылка 2",
+                        "url" => "https://test2",
+                        "title" => "перейти на тест 2",
+                    ],
+                ],
+            ];
+        }
+    }
+}

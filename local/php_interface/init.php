@@ -83,3 +83,9 @@ $eventManager->AddEventhandler("search", "BeforeIndex", [
     "MySearchEventHandlers",
     "BeforeIndexhandler"
 ]);
+
+//ex2-190
+$eventManager->AddEventhandler("main", "OnBuildGlobalMenu", [
+    "MyAdminMenuHandlers",
+    "OnBuildGlobalMenuHandler"
+]);
