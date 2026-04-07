@@ -77,3 +77,9 @@ if (!function_exists('custom_mail')) {
         return true;
     }
 }
+
+//ex2-630
+$eventManager->AddEventhandler("search", "BeforeIndex", [
+    "MySearchEventHandlers",
+    "BeforeIndexhandler"
+]);

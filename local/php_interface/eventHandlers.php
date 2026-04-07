@@ -136,3 +136,45 @@ class MyUserEventHandlers
     }
 }
 
+class MySearchEventHandlers
+{
+    public static function BeforeIndexHandler($arFields)
+    {
+        if ($arFields["MODULE_ID"] == "iblock" && $arFields["PARAM2"] == IBLOCK_REVIEWS_ID)
+        {
+            if (\Bitrix\Main\Loader::includeModule("iblock"))
+            {
+                $resReview = CIBlockElement::GetProperty(
+                    $arFields["PARAM2"],
+                    $arFields["ITEM_ID"],
+                    [],
+                    ["CODE" => "author"]
+                );
+
+                if($reviewAuthor = $resReview->Fetch())
+                {
+                    $userId = $reviewAuthor["VALUE"];
+                    
+                    if ($userId > 0)
+                    {
+                        $resUser = CUser::GetByID($userId);
+                        if ($userParam = $resUser->Fetch())
+                        {
+                            $classId = $userParam["UF_USER_CLASS"];
+                            
+                            if ($userParam["UF_USER_CLASS"] > 0)
+                            {
+                                $resEnum = CUserFieldEnum::GetList([], ["ID" => $classId]);
+                                if ($userClass = $resEnum->Fetch())
+                                {
+                                    $arFields["TITLE"] .= ". Класс:" . $userClass["VALUE"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $arFields;
+    }
+}
